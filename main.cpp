@@ -1,11 +1,13 @@
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include <bits/stdc++.h>
 using namespace std;
 
 struct Point { double x, y; };
 
-// ================== БЛОК ВАРИАНТА 7 ==================
-// Квадрат с отсеченной вершиной: |x| + |y| < 2, y < 1
-// Вершины против часовой стрелки.
+// v7: |x| + |y| < 2, y < 1
 const vector<Point> DOMAIN = {
     {-2.0,  0.0},
     { 0.0, -2.0},
@@ -16,30 +18,29 @@ const vector<Point> DOMAIN = {
 
 double f(double x, double y)   { return 1.0; }
 double phi(double x, double y) { return sin(x + y); }
-double v0(double x, double y)  { return sin(x + y); } // продолжение phi в фиктивную область
+double v0(double x, double y)  { return sin(x + y); }
 
-// Проверка точки внутри многоугольника (ray casting).
-// Для другого варианта можно заменить тело функции на нужное неравенство.
 bool insideDomain(double x, double y) {
     bool inside = false;
     const int n = (int)DOMAIN.size();
     for (int i = 0, j = n - 1; i < n; j = i++) {
         const Point& pi = DOMAIN[i];
         const Point& pj = DOMAIN[j];
-        bool intersect = ((pi.y > y) != (pj.y > y)) &&
-                         (x < (pj.x - pi.x) * (y - pi.y) / (pj.y - pi.y) + pi.x);
+        // y between pi.y and pj.y
+        const bool isCorrectY = (pi.y > y) != (pj.y > y);
+        // y - pi.y = delta y / delta x + (x - pi.x)
+        const bool xOfY = (pj.x - pi.x) * (y - pi.y) / (pj.y - pi.y) + pi.x;
+        bool intersect = (isCorrectY) && (x < xOfY);
         if (intersect) inside = !inside;
     }
     return inside;
 }
-// =====================================================
 
 int main(int argc, char** argv) {
-    int M = 80, N = 80;
+    int M = 1024, N = 1024;
     if (argc > 1) M = stoi(argv[1]);
     if (argc > 2) N = stoi(argv[2]);
 
-    // Bounding box по многоугольнику
     double A1 =  1e100, B1 = -1e100;
     double A2 =  1e100, B2 = -1e100;
     for (const auto& p : DOMAIN) {
@@ -50,7 +51,7 @@ int main(int argc, char** argv) {
     const double h1 = (B1 - A1) / M;
     const double h2 = (B2 - A2) / N;
     const double h  = max(h1, h2);
-    const double eps = h * h;          // по заданию
+    const double eps = h * h;
     const double inv_h1_2 = 1.0 / (h1 * h1);
     const double inv_h2_2 = 1.0 / (h2 * h2);
 
@@ -64,9 +65,7 @@ int main(int argc, char** argv) {
 
     vector<double> Q(n), F(n), B(n);
 
-    // Вычисление Q_ij, F_ij через долю площади ячейки в D.
-    // Для гибкости используется подсетка K x K; точность повышается увеличением K.
-    const int K = 12;
+    const int K = 12; // accurancy
     #pragma omp parallel for collapse(2) schedule(static)
     for (int i = 1; i <= M - 1; ++i) {
         for (int j = 1; j <= N - 1; ++j) {
@@ -135,10 +134,8 @@ int main(int argc, char** argv) {
         return s;
     };
 
-    // Начальное приближение w = 0 => r = B
     r = B;
 
-    // Диагональное предобуславливание
     #pragma omp parallel for schedule(static)
     for (int k = 0; k < n; ++k) {
         const double D = 2.0 * inv_h1_2 + 2.0 * inv_h2_2 + Q[k];
@@ -151,7 +148,11 @@ int main(int argc, char** argv) {
     const double delta = 1e-8;
     const int maxIter = n;
 
-    auto t0 = chrono::steady_clock::now();
+    #ifdef _OPENMP
+    double t0 = omp_get_wtime();
+    #else
+    auto t0 = std::chrono::steady_clock::now();
+    #endif
     int it = 0;
 
     for (it = 1; it <= maxIter; ++it) {
@@ -191,10 +192,14 @@ int main(int argc, char** argv) {
         rz = rzNew;
     }
 
-    auto t1 = chrono::steady_clock::now();
-    const double time = chrono::duration<double>(t1 - t0).count();
+    #ifdef _OPENMP
+    double time = omp_get_wtime() - t0;
+    #else
+    double time = std::chrono::duration<double>(
+        std::chrono::steady_clock::now() - t0).count();
+    #endif
 
-    // Невязка и максимум решения
+
     applyA(w, Ap);
     #pragma omp parallel for schedule(static)
     for (int k = 0; k < n; ++k) r[k] = B[k] - Ap[k];
@@ -210,6 +215,11 @@ int main(int argc, char** argv) {
     cout << "time=" << time << " sec\n";
     cout << "||r||_E=" << res << "\n";
     cout << "max|w|=" << maxw << "\n";
+
+    std::ofstream fout("solution.csv");
+    for (int i = 1; i <= M - 1; ++i)
+        for (int j = 1; j <= N - 1; ++j)
+            fout << X(i) << " " << Y(j) << " " << w[idx(i,j)] << "\n";
 
     return 0;
 }
