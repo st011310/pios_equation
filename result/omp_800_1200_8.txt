@@ -1,0 +1,54 @@
+Subject: Job 1612062: <# this file was automaticly created by mpisubmit.pl script for edu-cmc-skmodel26-618-1-02 #;source /polusfs/setenv/setup.SMPI;#BSUB -n 1;#BSUB -W 00:15;#BSUB -o main.%J.out;#BSUB -e main.%J.err;OMP_NUM_THREADS=8 mpiexec ./main 800 1200> in cluster <MSUCluster> Done
+
+Job <# this file was automaticly created by mpisubmit.pl script for edu-cmc-skmodel26-618-1-02 #;source /polusfs/setenv/setup.SMPI;#BSUB -n 1;#BSUB -W 00:15;#BSUB -o main.%J.out;#BSUB -e main.%J.err;OMP_NUM_THREADS=8 mpiexec ./main 800 1200> was submitted from host <polus-ib.bmc.hpc.cs.msu.ru> by user <edu-cmc-skmodel26-618-1-02> in cluster <MSUCluster> at Sun Nov  1 23:46:07 2026
+Job was executed on host(s) <polus-c2-ib.bmc.hpc.cs.msu.ru>, in queue <short>, as user <edu-cmc-skmodel26-618-1-02> in cluster <MSUCluster> at Sun Nov  1 23:46:07 2026
+</home_edu/edu-cmc-skmodel26-618-1/edu-cmc-skmodel26-618-1-02> was used as the home directory.
+</home_edu/edu-cmc-skmodel26-618-1/edu-cmc-skmodel26-618-1-02> was used as the working directory.
+Started at Sun Nov  1 23:46:07 2026
+Terminated at Sun Nov  1 23:46:17 2026
+Results reported at Sun Nov  1 23:46:17 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+# this file was automaticly created by mpisubmit.pl script for edu-cmc-skmodel26-618-1-02 #
+source /polusfs/setenv/setup.SMPI
+#BSUB -n 1
+#BSUB -W 00:15
+#BSUB -o main.%J.out
+#BSUB -e main.%J.err
+OMP_NUM_THREADS=8 mpiexec ./main 800 1200
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   46.17 sec.
+    Max Memory :                                 78 MB
+    Average Memory :                             58.75 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              5
+    Max Threads :                                17
+    Run time :                                   15 sec.
+    Turnaround time :                            10 sec.
+
+The output (if any) follows:
+
+Variant 7: |x|+|y|<2, y<1
+M=800 N=1200
+h1=0.005 h2=0.0025 eps=2.5e-05
+iterations=4
+time=0.135952 sec
+||r||_E=0.000191518
+max|w|=1
+
+
+PS:
+
+Read file <main.1612062.err> for stderr output of this job.
+

@@ -1,0 +1,56 @@
+Sender: LSF System <lsfadmin@polus-c2-ib.bmc.hpc.cs.msu.ru>
+Subject: Job 1612068: <my_omp_test> in cluster <MSUCluster> Done
+
+Job <my_omp_test> was submitted from host <polus-ib.bmc.hpc.cs.msu.ru> by user <edu-cmc-skmodel26-618-1-02> in cluster <MSUCluster> at Sun Nov  1 23:54:59 2026
+Job was executed on host(s) <4*polus-c2-ib.bmc.hpc.cs.msu.ru>, in queue <short>, as user <edu-cmc-skmodel26-618-1-02> in cluster <MSUCluster> at Sun Nov  1 23:54:59 2026
+</home_edu/edu-cmc-skmodel26-618-1/edu-cmc-skmodel26-618-1-02> was used as the home directory.
+</home_edu/edu-cmc-skmodel26-618-1/edu-cmc-skmodel26-618-1-02> was used as the working directory.
+Started at Sun Nov  1 23:54:59 2026
+Terminated at Sun Nov  1 23:55:06 2026
+Results reported at Sun Nov  1 23:55:06 2026
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#BSUB -J "my_omp_test"          # Имя задания
+#BSUB -o "job.%J.out"           # Файл для обычного вывода (%J — ID задания)
+#BSUB -e "job.%J.err"           # Файл для ошибок
+#BSUB -W 00:15                  # Лимит времени (15 минут)
+#BSUB -R "span[hosts=1]"        # Запустить всё на одном узле
+#BSUB -n 4                      # Запросить 2 физических ядра (16 потоков / 8 потоков на ядро)
+
+OMP_NUM_THREADS=16 ./main_omp 800 1200
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   52.90 sec.
+    Max Memory :                                 28 MB
+    Average Memory :                             19.00 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                20
+    Run time :                                   7 sec.
+    Turnaround time :                            7 sec.
+
+The output (if any) follows:
+
+Variant 7: |x|+|y|<2, y<1
+M=800 N=1200
+h1=0.005 h2=0.0025 eps=2.5e-05
+iterations=4
+time=0.0950004 sec
+||r||_E=0.000197091
+max|w|=1
+
+
+PS:
+
+Read file <job.1612068.err> for stderr output of this job.
+
